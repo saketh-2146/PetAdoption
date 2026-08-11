@@ -38,12 +38,11 @@ jobs:
           flutter test --machine | tojunit -o flutter-test-report.xml
 
       - name: Publish Flutter Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
-          name: Flutter Tests
-          path: flutter-test-report.xml
-          reporter: java-junit
+          files: flutter-test-report.xml
+          check_name: "Flutter Test Results"
 
   load_test:
     name: K6 Load Testing
@@ -59,9 +58,8 @@ jobs:
         run: k6 run --out junit=k6-test-report.xml load_tests/k6_load_test.js
 
       - name: Publish K6 Load Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
-          name: K6 Load Tests
-          path: k6-test-report.xml
-          reporter: java-junit
+          files: k6-test-report.xml
+          check_name: "K6 Load Test Results"
