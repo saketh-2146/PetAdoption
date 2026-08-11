@@ -1,0 +1,21 @@
+# Terms of Service
+
+Welcome to PetConnect! By using our app, you agree to these terms.
+
+## 1. Acceptance of Terms
+By accessing or using PetConnect, you agree to be bound by these Terms of Service.
+
+## 2. User Responsibilities
+- You must provide accurate and complete information during registration.
+- You are responsible for maintaining the confidentiality of your account credentials.
+- You agree not to use the app for any illegal or unauthorized purpose.
+
+## 3. Pet Listings
+- All pet listings must be accurate and truthful.
+- PetConnect reserves the right to remove any listing that violates our policies or is deemed inappropriate.
+
+## 4. Limitation of Liability
+PetConnect is a platform connecting adopters and listers. We are not responsible for any disputes, damages, or issues arising from adoptions facilitated through our app.
+
+## 5. Changes to Terms
+We reserve the right to modify these terms at any time. Continued use of the app constitutes acceptance of the modified terms.
