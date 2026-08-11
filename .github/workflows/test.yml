@@ -8,11 +8,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  actions: read
-  checks: write
-
 jobs:
   selenium_tests:
     name: Selenium Test Suite
@@ -27,24 +22,17 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install pytest pytest-html
+        run: pip install pytest pytest-excel
 
       - name: Run Selenium Tests
-        run: pytest tests_dummy/test_selenium.py --junitxml=selenium-report.xml --html=selenium-report.html --self-contained-html -q
+        run: pytest tests_dummy/test_selenium.py --excelreport=selenium_report.xlsx -q
 
-      - name: Upload HTML Report as Artifact
+      - name: Upload Excel Report as Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Selenium-HTML-Report
-          path: selenium-report.html
-
-      - name: Publish Test Results UI
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: selenium-report.xml
-          check_name: "Selenium 300 Tests"
+          name: Selenium-Excel-Report
+          path: selenium_report.xlsx
 
   appium_tests:
     name: Appium Test Suite
@@ -59,24 +47,17 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install pytest pytest-html
+        run: pip install pytest pytest-excel
 
       - name: Run Appium Tests
-        run: pytest tests_dummy/test_appium.py --junitxml=appium-report.xml --html=appium-report.html --self-contained-html -q
+        run: pytest tests_dummy/test_appium.py --excelreport=appium_report.xlsx -q
 
-      - name: Upload HTML Report as Artifact
+      - name: Upload Excel Report as Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Appium-HTML-Report
-          path: appium-report.html
-
-      - name: Publish Test Results UI
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: appium-report.xml
-          check_name: "Appium 300 Tests"
+          name: Appium-Excel-Report
+          path: appium_report.xlsx
 
   load_tests:
     name: K6 Load Test Suite
@@ -89,18 +70,11 @@ jobs:
         uses: grafana/setup-k6-action@v1
 
       - name: Run k6 load tests
-        run: k6 run --out junit=k6-report.xml load_tests/k6_300.js > k6-console-report.txt
+        run: k6 run --out csv=k6_report.csv load_tests/k6_300.js
 
-      - name: Upload Text Report as Artifact
+      - name: Upload Excel (CSV) Report as Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: K6-Text-Report
-          path: k6-console-report.txt
-
-      - name: Publish Test Results UI
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: k6-report.xml
-          check_name: "K6 Load 300 Tests"
+          name: K6-Excel-CSV-Report
+          path: k6_report.csv
