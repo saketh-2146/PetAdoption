@@ -12,6 +12,8 @@ import '../services/supabase_storage_service.dart';
 import '../screens/root_shell.dart';
 import '../theme/app_theme.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/loading_widget.dart';
+import '../main.dart';
 
 class SellPetScreen extends StatefulWidget {
   const SellPetScreen({super.key});
@@ -260,7 +262,7 @@ class _SellPetScreenState extends State<SellPetScreen> {
           ),
         );
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const RootShell()),
+          MaterialPageRoute(builder: (_) => const AuthGate()),
           (route) => false,
         );
       }
