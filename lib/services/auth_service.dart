@@ -101,7 +101,8 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
-      await GoogleSignIn().signOut();
+      // Fire and forget Google Sign-Out to prevent it from hanging the app
+      GoogleSignIn().signOut().catchError((_) => null);
     } catch (_) {
       // Ignore Google Sign In errors during sign out
     }
