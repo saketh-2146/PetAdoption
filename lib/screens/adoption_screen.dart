@@ -80,11 +80,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
         'submittedAt': FieldValue.serverTimestamp(),
       });
 
-      // Update pet status to remove it from the marketplace
-      await FirebaseFirestore.instance
-          .collection('pets')
-          .doc(pet.id)
-          .update({'status': 'Adopted'});
 
       // Notify the buyer
       await _firestore.addNotification(
