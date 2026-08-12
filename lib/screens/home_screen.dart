@@ -100,14 +100,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ? allPets
               : allPets.where((p) => p.species == _category).toList();
 
-          // Mocking different lists by shuffling or filtering
-          final featuredPets = List<Pet>.from(allPets)..shuffle(Random(42));
+          // Mocking different lists by sorting
+
           final recentlyAdded = List<Pet>.from(allPets)..sort((a, b) {
             final timeA = a.approvedAt ?? a.createdAt;
             final timeB = b.approvedAt ?? b.createdAt;
             return (timeB?.millisecondsSinceEpoch ?? 0).compareTo(timeA?.millisecondsSinceEpoch ?? 0);
           });
-          final nearbyPets = List<Pet>.from(allPets)..shuffle(Random(13));
+          });
 
           return CustomScrollView(
             slivers: [
@@ -265,15 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
               ] else ...[
                 // Home Sections when 'all' is selected
-                SliverToBoxAdapter(child: _buildSectionHeader('Featured Pets')),
-                SliverToBoxAdapter(child: _buildHorizontalPetList(featuredPets.take(6).toList(), appState)),
-                
                 SliverToBoxAdapter(child: _buildSectionHeader('Recently Added')),
                 SliverToBoxAdapter(child: _buildHorizontalPetList(recentlyAdded.take(6).toList(), appState)),
-                
-                SliverToBoxAdapter(child: _buildSectionHeader('Nearby Pets')),
-                SliverToBoxAdapter(child: _buildHorizontalPetList(nearbyPets.take(6).toList(), appState)),
-                
 
                 const SliverToBoxAdapter(child: SizedBox(height: 100)),
               ]
