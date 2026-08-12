@@ -74,6 +74,7 @@
   "adminEmailOnly": "అడ్మిన్ లాగిన్ ఇమెయిల్‌కు మాత్రమే పరిమితం.",
   "userRole": "వినియోగదారు",
   "adminRole": "అడ్మిన్",
+  "sellerRole": "విక్రేత",
   "invalidEmail": "చెల్లుబాటు అయ్యే ఇమెయిల్ నమోదు చేయండి",
   "invalidPassword": "కనీసం 6 అక్షరాలు",
   "forgotPassword": "పాస్వర్డ్ మర్చిపోయారా?",

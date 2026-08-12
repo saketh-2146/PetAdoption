@@ -74,6 +74,7 @@
   "adminEmailOnly": "व्यवस्थापक लॉगिन केवल ईमेल के लिए है।",
   "userRole": "उपयोगकर्ता",
   "adminRole": "व्यवस्थापक",
+  "sellerRole": "विक्रेता",
   "invalidEmail": "वैध ईमेल दर्ज करें",
   "invalidPassword": "कम से कम 6 अक्षर",
   "forgotPassword": "पासवर्ड भूल गए?",

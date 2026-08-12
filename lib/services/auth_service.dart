@@ -17,6 +17,7 @@ class AuthService {
     required String name,
     required String email,
     required String password,
+    required String role,
   }) async {
     final cred = await _auth.createUserWithEmailAndPassword(
       email: email.trim(),
@@ -27,6 +28,7 @@ class AuthService {
     await _db.collection('users').doc(cred.user!.uid).set({
       'name': name,
       'email': email.trim(),
+      'role': role,
       'avatarId': '1535713875-d780bfbbd5d4',
       'likedPetIds': <String>[],
       'createdAt': FieldValue.serverTimestamp(),
@@ -89,9 +91,11 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
-      GoogleSignIn().signOut();
-    } catch (_) {}
-    return _auth.signOut();
+      await GoogleSignIn().signOut();
+    } catch (_) {
+      // Ignore Google Sign In errors during sign out
+    }
+    await _auth.signOut();
   }
 
   /// Maps FirebaseAuthException codes to friendly messages for the UI.

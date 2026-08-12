@@ -21,7 +21,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
   final _addressCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
   bool _submitting = false;
-  bool _submitted = false;
 
   @override
   void dispose() {
@@ -30,6 +29,26 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
     _addressCtrl.dispose();
     _noteCtrl.dispose();
     super.dispose();
+  }
+
+  Widget _buildDetailRow(IconData icon, String title, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: AppColors.primary),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: outfit(size: 12, color: AppColors.muted)),
+              const SizedBox(height: 4),
+              Text(value, style: outfit(size: 14, weight: FontWeight.w600, color: AppColors.dark)),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _submit(Pet pet) async {
@@ -77,7 +96,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
           body: 'Your request for ${pet.name} is pending review from ${pet.owner.name}.',
           time: null,
           read: false,
-          imageId: pet.imageId,
+          imageId: pet.imageUrls?.isNotEmpty == true ? pet.imageUrls!.first : pet.imageId,
         ),
       );
 
@@ -89,18 +108,24 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
             id: '',
             type: 'adoption',
             title: 'New Application Received! 🎉',
-            body: '${_nameCtrl.text.trim()} has applied for ${pet.name}.',
+            body: '${_nameCtrl.text.trim()} has applied for ${pet.name}.\nContact: ${_phoneCtrl.text.trim()}\nAddress: ${_addressCtrl.text.trim()}\nNote: ${_noteCtrl.text.trim()}',
             time: null,
             read: false,
-            imageId: pet.imageId,
+            imageId: pet.imageUrls?.isNotEmpty == true ? pet.imageUrls!.first : pet.imageId,
           ),
         );
       }
 
-      setState(() {
-        _submitted = true;
-        _submitting = false;
-      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Application Submitted Successfully! 🎉'),
+            backgroundColor: AppColors.primary,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        Navigator.of(context).popUntil((r) => r.isFirst);
+      }
     } catch (e) {
       setState(() => _submitting = false);
       if (mounted) {
@@ -122,46 +147,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
         builder: (context, snapshot) {
           final pet = snapshot.data;
           if (pet == null) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
-
-          if (_submitted) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 88,
-                      height: 88,
-                      decoration: const BoxDecoration(color: AppColors.secondaryPale, shape: BoxShape.circle),
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.celebration, size: 40, color: AppColors.secondary),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Application Submitted!',
-                      style: nunito(size: 20, weight: FontWeight.w900),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '${pet.owner.name} will review your request for ${pet.name} and reach out soon.',
-                      style: outfit(size: 13, color: AppColors.muted),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 28),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
-                        child: const Text('Back to Home'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -191,6 +176,36 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                         '₹${pet.adoptionFee?.toStringAsFixed(0) ?? '0'}',
                         style: nunito(size: 24, weight: FontWeight.w900, color: AppColors.primary),
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text('Pet & Contact Details', style: nunito(size: 15, weight: FontWeight.w800)),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.warmBorder),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDetailRow(Icons.location_on_outlined, 'Location', pet.location),
+                      if (pet.contactMobile != null && pet.contactMobile!.isNotEmpty) ...[
+                        const Divider(height: 24, color: AppColors.warmBorder),
+                        _buildDetailRow(Icons.phone_outlined, 'Contact Number', pet.contactMobile!),
+                      ],
+                      if (pet.contactEmail != null && pet.contactEmail!.isNotEmpty) ...[
+                        const Divider(height: 24, color: AppColors.warmBorder),
+                        _buildDetailRow(Icons.email_outlined, 'Email Address', pet.contactEmail!),
+                      ],
+                      const Divider(height: 24, color: AppColors.warmBorder),
+                      _buildDetailRow(Icons.medical_services_outlined, 'Health Info', 
+                          'Vaccinated: ${pet.health.vaccinated ? 'Yes' : 'No'}\n'
+                          'Neutered: ${pet.health.neutered ? 'Yes' : 'No'}\n'
+                          'Dewormed: ${pet.health.dewormed ? 'Yes' : 'No'}'),
                     ],
                   ),
                 ),

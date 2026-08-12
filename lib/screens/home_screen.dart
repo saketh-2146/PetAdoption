@@ -102,7 +102,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // Mocking different lists by shuffling or filtering
           final featuredPets = List<Pet>.from(allPets)..shuffle(Random(42));
-          final recentlyAdded = List<Pet>.from(allPets)..sort((a, b) => (b.createdAt?.millisecondsSinceEpoch ?? 0).compareTo(a.createdAt?.millisecondsSinceEpoch ?? 0));
+          final recentlyAdded = List<Pet>.from(allPets)..sort((a, b) {
+            final timeA = a.approvedAt ?? a.createdAt;
+            final timeB = b.approvedAt ?? b.createdAt;
+            return (timeB?.millisecondsSinceEpoch ?? 0).compareTo(timeA?.millisecondsSinceEpoch ?? 0);
+          });
           final nearbyPets = List<Pet>.from(allPets)..shuffle(Random(13));
 
           return CustomScrollView(

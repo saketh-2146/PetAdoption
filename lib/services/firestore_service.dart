@@ -22,7 +22,11 @@ class FirestoreService {
         .snapshots()
         .map((snap) {
           final list = snap.docs.map((d) => Pet.fromMap(d.id, d.data())).toList();
-          list.sort((a, b) => (b.createdAt?.millisecondsSinceEpoch ?? 0).compareTo(a.createdAt?.millisecondsSinceEpoch ?? 0));
+          list.sort((a, b) {
+            final timeA = a.approvedAt ?? a.createdAt;
+            final timeB = b.approvedAt ?? b.createdAt;
+            return (timeB?.millisecondsSinceEpoch ?? 0).compareTo(timeA?.millisecondsSinceEpoch ?? 0);
+          });
           return list;
         });
   }
@@ -286,5 +290,14 @@ class FirestoreService {
 
   Future<void> addNotification(String uid, AppNotification notif) {
     return _users.doc(uid).collection('notifications').add(notif.toMap());
+  }
+
+  Future<void> deleteNotifications(String uid, List<String> notifIds) async {
+    final batch = _db.batch();
+    for (final id in notifIds) {
+      final doc = _users.doc(uid).collection('notifications').doc(id);
+      batch.delete(doc);
+    }
+    await batch.commit();
   }
 }

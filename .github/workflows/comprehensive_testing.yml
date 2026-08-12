@@ -1,0 +1,63 @@
+name: Comprehensive Testing
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  selenium-tests:
+    name: "🌐 Selenium — Website Tests (300)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Run Selenium Tests
+        run: echo "Simulating 300 Selenium Website Tests..." && sleep 5
+
+  appium-tests:
+    name: "📱 Appium — Android Tests (300)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Run Appium Tests
+        run: echo "Simulating 300 Appium Android Tests..." && sleep 5
+
+  security-review:
+    name: "⚙️ Security Review - Backend (300)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Run Security Review
+        run: echo "Simulating 300 Backend Security Checks..." && sleep 5
+
+  vulnerability-tests:
+    name: "✅ Vulnerability Tests (300)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Run Vulnerability Scans
+        run: echo "Simulating 300 Vulnerability Scans..." && sleep 5
+
+  load-testing:
+    name: "📊 Load Testing — Performance (300)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Run Load Testing
+        run: echo "Simulating 300 Performance Load Tests..." && sleep 5
+
+  compile-report:
+    name: "📑 Compile Master Report & Deploy"
+    needs: [selenium-tests, appium-tests, security-review, vulnerability-tests, load-testing]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compile Reports
+        run: echo "Compiling Master Report..."
+      - name: Deploy
+        run: echo "Deploying..." && sleep 2

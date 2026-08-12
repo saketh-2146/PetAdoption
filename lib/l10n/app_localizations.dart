@@ -544,6 +544,12 @@ abstract class AppLocalizations {
   /// **'Admin'**
   String get adminRole;
 
+  /// No description provided for @sellerRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller'**
+  String get sellerRole;
+
   /// No description provided for @invalidEmail.
   ///
   /// In en, this message translates to:

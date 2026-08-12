@@ -160,7 +160,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         icon: Icons.person_outline,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildRoleCard(
+                        role: 'seller',
+                        title: l10n.sellerRole,
+                        icon: Icons.storefront_outlined,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: _buildRoleCard(
                         role: 'admin',
@@ -294,7 +302,13 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Icon(icon, size: 28, color: isSelected ? Colors.white : AppColors.muted),
             const SizedBox(height: 8),
-            Text(title, style: nunito(size: 15, weight: FontWeight.w800, color: isSelected ? Colors.white : AppColors.darkMid)),
+            Text(
+              title, 
+              style: nunito(size: 14, weight: FontWeight.w800, color: isSelected ? Colors.white : AppColors.darkMid),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),

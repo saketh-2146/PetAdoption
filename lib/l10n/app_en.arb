@@ -74,6 +74,7 @@
   "adminEmailOnly": "Admin login is restricted to email and password only.",
   "userRole": "User",
   "adminRole": "Admin",
+  "sellerRole": "Seller",
   "invalidEmail": "Enter a valid email",
   "invalidPassword": "At least 6 characters",
   "forgotPassword": "Forgot password?",

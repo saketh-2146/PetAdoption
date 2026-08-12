@@ -19,56 +19,103 @@ import 'services/settings_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
-  try {
-    await Supabase.initialize(
-      url: SupabaseConfig.supabaseUrl,
-      publishableKey: SupabaseConfig.supabaseAnonKey,
-    );
-    debugPrint('Supabase initialized successfully');
-  } catch (e) {
-    debugPrint('Supabase initialization failed: $e');
-  }
-
-  // Clear all pets so we have a clean slate as requested.
-  // We can remove this line later once the DB is empty.
-  await SeedService().clearAllPets();
-
-  // Push the demo pet catalogue into Firestore once, so the app has the
-  // exact same data as the Figma prototype from the very first run.
-  // (Commented out so they don't re-seed automatically after wiping)
-  // await SeedService().seedPetsIfEmpty();
-  await SeedService().ensureAdminExists();
-
   runApp(const PetConnectApp());
 }
 
-class PetConnectApp extends StatelessWidget {
+class PetConnectApp extends StatefulWidget {
   const PetConnectApp({super.key});
 
   @override
+  State<PetConnectApp> createState() => _PetConnectAppState();
+}
+
+class _PetConnectAppState extends State<PetConnectApp> {
+  Future<void>? _initFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _initFuture = _initializeServices();
+  }
+
+  Future<void> _initializeServices() async {
+    // Initialize Firebase first because it is required for AuthGate
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    
+    // Fire and forget other initializations
+    Future.microtask(() async {
+      try {
+        await Supabase.initialize(
+          url: SupabaseConfig.supabaseUrl,
+          publishableKey: SupabaseConfig.supabaseAnonKey,
+        );
+        debugPrint('Supabase initialized successfully');
+      } catch (e) {
+        debugPrint('Supabase initialization failed: $e');
+      }
+      await SeedService().clearAllPets();
+      await SeedService().ensureAdminExists();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AppState()),
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
-      ],
-      child: Consumer<SettingsProvider>(
-        builder: (context, settings, child) {
-          return MaterialApp(
-            title: 'PetConnect',
+    return FutureBuilder(
+      future: _initFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: settings.themeMode,
-            locale: settings.locale,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const AuthGate(),
+            home: Scaffold(
+              backgroundColor: AppColors.cream,
+              body: Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              ),
+            ),
           );
-        },
-      ),
+        }
+
+        if (snapshot.hasError) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              backgroundColor: AppColors.cream,
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Text(
+                    'Initialization Error:\n${snapshot.error}',
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AppState()),
+            ChangeNotifierProvider(create: (_) => SettingsProvider()),
+          ],
+          child: Consumer<SettingsProvider>(
+            builder: (context, settings, child) {
+              return MaterialApp(
+                title: 'PetConnect',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light,
+                darkTheme: AppTheme.dark,
+                themeMode: settings.themeMode,
+                locale: settings.locale,
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+                home: const AuthGate(),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

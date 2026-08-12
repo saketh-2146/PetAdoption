@@ -7,6 +7,7 @@ class AppUser {
   final String name;
   final String email;
   final String avatarId;
+  final String role;
   final List<String> likedPetIds;
   final DateTime? createdAt;
   
@@ -28,6 +29,7 @@ class AppUser {
     required this.name,
     required this.email,
     required this.avatarId,
+    this.role = 'user',
     required this.likedPetIds,
     this.createdAt,
     this.mobileNumber,
@@ -45,6 +47,7 @@ class AppUser {
         uid: uid,
         name: map['name'] ?? '',
         email: map['email'] ?? '',
+        role: map['role'] ?? 'user',
         avatarId: map['avatarId'] ?? '1535713875-d780bfbbd5d4',
         likedPetIds: List<String>.from(map['likedPetIds'] ?? const []),
         createdAt: (map['createdAt'] is Timestamp) ? (map['createdAt'] as Timestamp).toDate() : null,
@@ -62,6 +65,7 @@ class AppUser {
   Map<String, dynamic> toMap() => {
         'name': name,
         'email': email,
+        'role': role,
         'avatarId': avatarId,
         'likedPetIds': likedPetIds,
         'createdAt': createdAt == null ? FieldValue.serverTimestamp() : Timestamp.fromDate(createdAt!),

@@ -8,6 +8,7 @@ import '../widgets/custom_button.dart';
 
 import 'notifications_screen.dart';
 import 'settings_screen.dart';
+import 'my_orders_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -19,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
 
     final menuItems = [
       (icon: Icons.notifications_none, label: 'Notifications', onTap: (BuildContext c) => Navigator.of(c).push(MaterialPageRoute(builder: (_) => const NotificationsScreen()))),
-      (icon: Icons.pets, label: 'My Adoptions', onTap: (BuildContext c) => _comingSoon(c, 'My Adoptions')),
+      (icon: Icons.shopping_bag_outlined, label: 'My Orders', onTap: (BuildContext c) => Navigator.of(c).push(MaterialPageRoute(builder: (_) => const MyOrdersScreen()))),
       (icon: Icons.settings_outlined, label: 'Settings', onTap: (BuildContext c) => Navigator.of(c).push(MaterialPageRoute(builder: (_) => const SettingsScreen()))),
     ];
 
@@ -128,20 +129,4 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  static void _comingSoon(BuildContext context, String title) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text('🚧 $title', style: nunito(weight: FontWeight.w800)),
-        content: Text('This feature is under construction and will be available in the next update.', style: outfit()),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK', style: nunito(color: AppColors.primary, weight: FontWeight.w800)),
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -6,11 +6,13 @@ enum AppTab { home, search, adoptions, addPet, profile }
 
 class BottomNav extends StatelessWidget {
   final AppTab activeTab;
+  final List<AppTab> visibleTabs;
   final ValueChanged<AppTab> onTabChange;
 
   const BottomNav({
     super.key,
     required this.activeTab,
+    required this.visibleTabs,
     required this.onTabChange,
   });
 
@@ -19,13 +21,15 @@ class BottomNav extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
     
-    final items = [
+    final allItems = [
       (tab: AppTab.home, icon: Icons.home_rounded, label: l10n.navHome),
       (tab: AppTab.search, icon: Icons.search_rounded, label: l10n.searchHint),
       (tab: AppTab.adoptions, icon: Icons.pets_rounded, label: l10n.myAdoptionsMenu),
       (tab: AppTab.addPet, icon: Icons.add_circle_outline_rounded, label: l10n.sellAPet),
       (tab: AppTab.profile, icon: Icons.person_rounded, label: l10n.navProfile),
     ];
+
+    final items = allItems.where((item) => visibleTabs.contains(item.tab)).toList();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

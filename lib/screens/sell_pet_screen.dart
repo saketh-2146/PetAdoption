@@ -238,6 +238,22 @@ class _SellPetScreenState extends State<SellPetScreen> {
           read: false,
         ),
       );
+
+      // Notify all admins
+      final adminsQuery = await FirebaseFirestore.instance.collection('users').where('role', isEqualTo: 'admin').get();
+      for (final adminDoc in adminsQuery.docs) {
+        await FirestoreService().addNotification(
+          adminDoc.id,
+          AppNotification(
+            id: '',
+            type: 'system',
+            title: 'New Pet Approval Request 🐾',
+            body: '${user.displayName ?? 'A seller'} has requested to list ${pet.name}. Please review the pending listings.',
+            time: null,
+            read: false,
+          ),
+        );
+      }
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

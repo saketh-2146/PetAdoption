@@ -22,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _loading = false;
   String? _error;
   bool _obscure = true;
+  String _selectedRole = 'user';
 
   @override
   void dispose() {
@@ -43,9 +44,12 @@ class _SignupScreenState extends State<SignupScreen> {
         name: _name.text.trim(),
         email: _email.text,
         password: _password.text,
+        role: _selectedRole,
       );
       await _seed.seedWelcomeNotifications(cred.user!.uid);
-      // AuthGate listens to authStateChanges and will navigate automatically.
+      if (mounted) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
     } catch (e) {
       setState(() => _error = AuthService.friendlyError(e));
     } finally {
@@ -78,7 +82,18 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 4),
                 Text('Join PetConnect to start adopting or buying pets.',
                     style: outfit(size: 14, color: AppColors.muted)),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+                DropdownButtonFormField<String>(
+                  value: _selectedRole,
+                  decoration: const InputDecoration(labelText: 'Role', prefixIcon: Icon(Icons.manage_accounts_outlined)),
+                  items: const [
+                    DropdownMenuItem(value: 'user', child: Text('User')),
+                    DropdownMenuItem(value: 'seller', child: Text('Seller')),
+                    DropdownMenuItem(value: 'admin', child: Text('Admin')),
+                  ],
+                  onChanged: (val) => setState(() => _selectedRole = val!),
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _name,
                   decoration: const InputDecoration(labelText: 'Full name', prefixIcon: Icon(Icons.person_outline)),

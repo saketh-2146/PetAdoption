@@ -234,6 +234,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminRole => 'Admin';
 
   @override
+  String get sellerRole => 'Seller';
+
+  @override
   String get invalidEmail => 'Enter a valid email';
 
   @override

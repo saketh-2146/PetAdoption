@@ -232,6 +232,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get adminRole => 'व्यवस्थापक';
 
   @override
+  String get sellerRole => 'विक्रेता';
+
+  @override
   String get invalidEmail => 'वैध ईमेल दर्ज करें';
 
   @override

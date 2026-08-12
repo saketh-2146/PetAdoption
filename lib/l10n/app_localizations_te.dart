@@ -232,6 +232,9 @@ class AppLocalizationsTe extends AppLocalizations {
   String get adminRole => 'అడ్మిన్';
 
   @override
+  String get sellerRole => 'విక్రేత';
+
+  @override
   String get invalidEmail => 'చెల్లుబాటు అయ్యే ఇమెయిల్ నమోదు చేయండి';
 
   @override
