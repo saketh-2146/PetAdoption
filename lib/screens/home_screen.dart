@@ -107,8 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
             final timeB = b.approvedAt ?? b.createdAt;
             return (timeB?.millisecondsSinceEpoch ?? 0).compareTo(timeA?.millisecondsSinceEpoch ?? 0);
           });
-          });
-
           return CustomScrollView(
             slivers: [
               // Header
