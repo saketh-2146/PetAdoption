@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 
 def generate_report(name):
@@ -12,6 +13,10 @@ def generate_report(name):
     df = pd.DataFrame(data)
     df.to_excel(f'{name}_report.xlsx', index=False)
 
-generate_report('selenium')
-generate_report('appium')
-generate_report('k6')
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        generate_report(sys.argv[1])
+    else:
+        generate_report('selenium')
+        generate_report('appium')
+        generate_report('k6')
