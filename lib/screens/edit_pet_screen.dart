@@ -29,9 +29,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
   late final TextEditingController _pincode;
   late final TextEditingController _state;
   late final TextEditingController _district;
-  late final TextEditingController _mandal;
   late final TextEditingController _village;
-  late final TextEditingController _landmark;
   late final TextEditingController _contactEmail;
   late final TextEditingController _contactMobile;
   
@@ -58,9 +56,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
     _pincode = TextEditingController(text: widget.pet.pincode ?? '');
     _state = TextEditingController(text: widget.pet.state ?? '');
     _district = TextEditingController(text: widget.pet.district ?? '');
-    _mandal = TextEditingController(text: widget.pet.mandal ?? '');
     _village = TextEditingController(text: widget.pet.village ?? '');
-    _landmark = TextEditingController(text: widget.pet.landmark ?? '');
     _contactEmail = TextEditingController(text: widget.pet.contactEmail ?? '');
     _contactMobile = TextEditingController(text: widget.pet.contactMobile ?? '');
     _species = widget.pet.species;
@@ -75,7 +71,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   @override
   void dispose() {
-    for (final c in [_name, _breed, _age, _price, _description, _contactEmail, _contactMobile, _pincode, _state, _district, _mandal, _village, _landmark]) {
+    for (final c in [_name, _breed, _age, _price, _description, _contactEmail, _contactMobile, _pincode, _state, _district, _village]) {
       c.dispose();
     }
     super.dispose();
@@ -209,7 +205,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
       final finalImageUrls = [..._existingImages, ...newlyUploadedUrls];
       final priceValue = double.tryParse(_price.text.trim()) ?? 0;
-      final locationStr = '${_village.text.trim()}, ${_mandal.text.trim()}, ${_district.text.trim()}, ${_state.text.trim()} - ${_pincode.text.trim()}';
+      final locationStr = '${_village.text.trim()}, ${_district.text.trim()}, ${_state.text.trim()} - ${_pincode.text.trim()}';
       
       final updatedPet = Pet(
         id: widget.pet.id,
@@ -239,10 +235,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
         contactMobile: _contactMobile.text.trim(),
         pincode: _pincode.text.trim(),
         state: _state.text.trim(),
-        district: _district.text.trim(),
-        mandal: _mandal.text.trim(),
         village: _village.text.trim(),
-        landmark: _landmark.text.trim(),
         createdAt: widget.pet.createdAt,
         approvedAt: widget.pet.approvedAt,
         approvedBy: widget.pet.approvedBy,
@@ -548,28 +541,9 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
-                      controller: _mandal,
-                      decoration: const InputDecoration(labelText: 'Mandal'),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
                       controller: _village,
                       decoration: const InputDecoration(labelText: 'Village/City'),
                       validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _landmark,
-                      decoration: const InputDecoration(labelText: 'Landmark'),
                     ),
                   ),
                 ],

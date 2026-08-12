@@ -30,9 +30,7 @@ class _SellPetScreenState extends State<SellPetScreen> {
   final _pincode = TextEditingController();
   final _state = TextEditingController();
   final _district = TextEditingController();
-  final _mandal = TextEditingController();
   final _village = TextEditingController();
-  final _landmark = TextEditingController();
   final _contactEmail = TextEditingController();
   final _contactMobile = TextEditingController();
   
@@ -48,7 +46,7 @@ class _SellPetScreenState extends State<SellPetScreen> {
 
   @override
   void dispose() {
-    for (final c in [_name, _breed, _age, _price, _description, _contactEmail, _contactMobile, _pincode, _state, _district, _mandal, _village, _landmark]) {
+    for (final c in [_name, _breed, _age, _price, _description, _contactEmail, _contactMobile, _pincode, _state, _district, _village]) {
       c.dispose();
     }
     super.dispose();
@@ -179,7 +177,7 @@ class _SellPetScreenState extends State<SellPetScreen> {
       }
 
       final priceValue = double.tryParse(_price.text.trim()) ?? 0;
-      final locationStr = '${_village.text.trim()}, ${_mandal.text.trim()}, ${_district.text.trim()}, ${_state.text.trim()} - ${_pincode.text.trim()}';
+      final locationStr = '${_village.text.trim()}, ${_district.text.trim()}, ${_state.text.trim()} - ${_pincode.text.trim()}';
       
       final pet = Pet(
         id: newPetId,
@@ -216,10 +214,7 @@ class _SellPetScreenState extends State<SellPetScreen> {
         contactMobile: _contactMobile.text.trim(),
         pincode: _pincode.text.trim(),
         state: _state.text.trim(),
-        district: _district.text.trim(),
-        mandal: _mandal.text.trim(),
         village: _village.text.trim(),
-        landmark: _landmark.text.trim(),
       );
 
       debugPrint('Saving to Firestore...');
@@ -520,34 +515,13 @@ class _SellPetScreenState extends State<SellPetScreen> {
                       validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _mandal,
-                      decoration: const InputDecoration(labelText: 'Mandal'),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _village,
-                      decoration: const InputDecoration(labelText: 'Village/City'),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _landmark,
-                      decoration: const InputDecoration(labelText: 'Landmark'),
-                    ),
-                  ),
-                ],
+              TextFormField(
+                controller: _village,
+                decoration: const InputDecoration(labelText: 'Village/City'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
