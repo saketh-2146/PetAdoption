@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _error = null;
     });
     try {
-      await _auth.signIn(email: _email.text, password: _password.text);
+      await _auth.signIn(email: _email.text, password: _password.text, role: _selectedRole);
       // AuthGate listens to authStateChanges and will navigate automatically.
     } catch (e) {
       setState(() => _error = AuthService.friendlyError(e));
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _auth.signInWithGoogle();
+      await _auth.signInWithGoogle(role: _selectedRole);
       // AuthGate will navigate
     } catch (e) {
       final msg = AuthService.friendlyError(e);

@@ -40,15 +40,20 @@ class AuthService {
   Future<UserCredential> signIn({
     required String email,
     required String password,
-  }) {
-    return _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
+    String? role,
+  }) async {
+    final cred = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
+    if (role != null && cred.user != null) {
+      await _db.collection('users').doc(cred.user!.uid).set({'role': role}, SetOptions(merge: true));
+    }
+    return cred;
   }
 
   Future<void> sendPasswordReset(String email) {
     return _auth.sendPasswordResetEmail(email: email.trim());
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle({String? role}) async {
     // Determine configuration based on platform
     final GoogleSignIn googleSignIn = GoogleSignIn(
       // On Web, GoogleSignIn requires a clientId. 
@@ -69,7 +74,7 @@ class AuthService {
 
     final userCredential = await _auth.signInWithCredential(credential);
     
-    // Check if user is new, if so create firestore record
+    // Check if user is new, if so create firestore record, else just update role
     if (userCredential.additionalUserInfo?.isNewUser == true) {
       final u = userCredential.user!;
       await _db.collection('users').doc(u.uid).set({
@@ -79,10 +84,15 @@ class AuthService {
         'email': u.email ?? '',
         'photoURL': u.photoURL ?? '',
         'phoneNumber': u.phoneNumber ?? '',
-        'role': 'user',
+        'role': role ?? 'user',
         'avatarId': '1535713875-d780bfbbd5d4',
         'likedPetIds': <String>[],
         'createdAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } else if (role != null) {
+      final u = userCredential.user!;
+      await _db.collection('users').doc(u.uid).set({
+        'role': role,
       }, SetOptions(merge: true));
     }
 
