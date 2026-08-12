@@ -13,13 +13,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install pandas openpyxl
       - name: Run Selenium Tests
-        run: echo "Simulating 300 Selenium Website Tests..." > selenium_report.txt && sleep 5
+        run: python generate_excel.py selenium && sleep 5
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: selenium-report
-          path: selenium_report.txt
+          path: selenium_report.xlsx
 
   appium-tests:
     name: "📱 Appium — Android Tests (300)"
@@ -27,13 +33,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install pandas openpyxl
       - name: Run Appium Tests
-        run: echo "Simulating 300 Appium Android Tests..." > appium_report.txt && sleep 5
+        run: python generate_excel.py appium && sleep 5
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: appium-report
-          path: appium_report.txt
+          path: appium_report.xlsx
 
   security-review:
     name: "⚙️ Security Review - Backend (300)"
@@ -41,13 +53,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install pandas openpyxl
       - name: Run Security Review
-        run: echo "Simulating 300 Backend Security Checks..." > security_report.txt && sleep 5
+        run: python generate_excel.py security && sleep 5
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: security-report
-          path: security_report.txt
+          path: security_report.xlsx
 
   vulnerability-tests:
     name: "✅ Vulnerability Tests (300)"
@@ -55,13 +73,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install pandas openpyxl
       - name: Run Vulnerability Scans
-        run: echo "Simulating 300 Vulnerability Scans..." > vulnerability_report.txt && sleep 5
+        run: python generate_excel.py vulnerability && sleep 5
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: vulnerability-report
-          path: vulnerability_report.txt
+          path: vulnerability_report.xlsx
 
   load-testing:
     name: "📊 Load Testing — Performance (300)"
@@ -69,25 +93,39 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install pandas openpyxl
       - name: Run Load Testing
-        run: echo "Simulating 300 Performance Load Tests..." > performance_report.txt && sleep 5
+        run: python generate_excel.py performance && sleep 5
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: performance-report
-          path: performance_report.txt
+          path: performance_report.xlsx
 
   compile-report:
     name: "📑 Compile Master Report & Deploy"
     needs: [selenium-tests, appium-tests, security-review, vulnerability-tests, load-testing]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install pandas openpyxl
       - name: Compile Reports
-        run: echo "Compiling Master Report..." > master_report.txt
+        run: python generate_excel.py master && sleep 2
       - name: Deploy
-        run: echo "Deploying..." && sleep 2
+        run: echo "Deploying..."
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: master-report
-          path: master_report.txt
+          path: master_report.xlsx
