@@ -14,7 +14,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Run Selenium Tests
-        run: echo "Simulating 300 Selenium Website Tests..." && sleep 5
+        run: echo "Simulating 300 Selenium Website Tests..." > selenium_report.txt && sleep 5
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-report
+          path: selenium_report.txt
 
   appium-tests:
     name: "📱 Appium — Android Tests (300)"
@@ -23,7 +28,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Run Appium Tests
-        run: echo "Simulating 300 Appium Android Tests..." && sleep 5
+        run: echo "Simulating 300 Appium Android Tests..." > appium_report.txt && sleep 5
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-report
+          path: appium_report.txt
 
   security-review:
     name: "⚙️ Security Review - Backend (300)"
@@ -32,7 +42,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Run Security Review
-        run: echo "Simulating 300 Backend Security Checks..." && sleep 5
+        run: echo "Simulating 300 Backend Security Checks..." > security_report.txt && sleep 5
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security_report.txt
 
   vulnerability-tests:
     name: "✅ Vulnerability Tests (300)"
@@ -41,7 +56,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Run Vulnerability Scans
-        run: echo "Simulating 300 Vulnerability Scans..." && sleep 5
+        run: echo "Simulating 300 Vulnerability Scans..." > vulnerability_report.txt && sleep 5
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulnerability-report
+          path: vulnerability_report.txt
 
   load-testing:
     name: "📊 Load Testing — Performance (300)"
@@ -50,7 +70,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Run Load Testing
-        run: echo "Simulating 300 Performance Load Tests..." && sleep 5
+        run: echo "Simulating 300 Performance Load Tests..." > performance_report.txt && sleep 5
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report
+          path: performance_report.txt
 
   compile-report:
     name: "📑 Compile Master Report & Deploy"
@@ -58,6 +83,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Compile Reports
-        run: echo "Compiling Master Report..."
+        run: echo "Compiling Master Report..." > master_report.txt
       - name: Deploy
         run: echo "Deploying..." && sleep 2
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-report
+          path: master_report.txt
