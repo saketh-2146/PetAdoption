@@ -286,9 +286,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         title: Text('Edit Listing', style: nunito(size: 18, weight: FontWeight.w800)),
         centerTitle: true,
@@ -449,7 +447,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       initialValue: _species,
-                      decoration: const InputDecoration(labelText: 'Species'),
+                      decoration: const InputDecoration(labelText: 'Species', prefixIcon: Icon(Icons.pets, color: AppColors.muted)),
                       items: const [
                         DropdownMenuItem(value: 'dog', child: Text('Dog')),
                         DropdownMenuItem(value: 'cat', child: Text('Cat')),
@@ -465,26 +463,26 @@ class _EditPetScreenState extends State<EditPetScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _name,
-                decoration: const InputDecoration(labelText: 'Pet name'),
+                decoration: const InputDecoration(labelText: 'Pet name', prefixIcon: Icon(Icons.badge_outlined, color: AppColors.muted)),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _breed,
-                decoration: const InputDecoration(labelText: 'Breed'),
+                decoration: const InputDecoration(labelText: 'Breed', prefixIcon: Icon(Icons.category_outlined, color: AppColors.muted)),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
-                    child: TextFormField(controller: _age, decoration: const InputDecoration(labelText: 'Age (e.g. 2 yrs)')),
+                    child: TextFormField(controller: _age, decoration: const InputDecoration(labelText: 'Age (e.g. 2 yrs)', prefixIcon: Icon(Icons.cake_outlined, color: AppColors.muted))),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       initialValue: _gender,
-                      decoration: const InputDecoration(labelText: 'Gender'),
+                      decoration: const InputDecoration(labelText: 'Gender', prefixIcon: Icon(Icons.transgender_outlined, color: AppColors.muted)),
                       items: const [
                         DropdownMenuItem(value: 'male', child: Text('Male')),
                         DropdownMenuItem(value: 'female', child: Text('Female')),
@@ -500,7 +498,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Adoption fee (INR)',
-                  prefixIcon: Icon(Icons.currency_rupee),
+                  prefixIcon: Icon(Icons.currency_rupee, color: AppColors.muted),
                 ),
                 validator: (v) => (v == null || double.tryParse(v.trim()) == null) ? 'Enter a number' : null,
               ),
@@ -514,7 +512,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     child: TextFormField(
                       controller: _pincode,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Pincode', prefixIcon: Icon(Icons.pin_drop_outlined)),
+                      decoration: const InputDecoration(labelText: 'Pincode', prefixIcon: Icon(Icons.pin_drop_outlined, color: AppColors.muted)),
                       validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                     ),
                   ),
@@ -522,7 +520,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _state,
-                      decoration: const InputDecoration(labelText: 'State'),
+                      decoration: const InputDecoration(labelText: 'State', prefixIcon: Icon(Icons.map_outlined, color: AppColors.muted)),
                       validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                     ),
                   ),
@@ -534,7 +532,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _district,
-                      decoration: const InputDecoration(labelText: 'District'),
+                      decoration: const InputDecoration(labelText: 'District', prefixIcon: Icon(Icons.location_city_outlined, color: AppColors.muted)),
                       validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                     ),
                   ),
@@ -542,7 +540,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _village,
-                      decoration: const InputDecoration(labelText: 'Village/City'),
+                      decoration: const InputDecoration(labelText: 'Village/City', prefixIcon: Icon(Icons.holiday_village_outlined, color: AppColors.muted)),
                       validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                     ),
                   ),

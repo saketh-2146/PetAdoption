@@ -27,6 +27,7 @@ void main() {
     }
     
     file.writeAsStringSync(buffer.toString());
+    // ignore: avoid_print
     print('Generated reports/${test}_report.csv');
   }
 }

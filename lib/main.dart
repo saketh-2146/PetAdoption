@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 import 'config/supabase_config.dart';
 import 'theme/app_theme.dart';
 import 'services/app_state.dart';
-import 'services/seed_service.dart';
+
 import 'package:petconnect/l10n/app_localizations.dart';
 
 import 'screens/onboarding_screen.dart';
@@ -53,8 +53,6 @@ class _PetConnectAppState extends State<PetConnectApp> {
       } catch (e) {
         debugPrint('Supabase initialization failed: $e');
       }
-      await SeedService().clearAllPets();
-      await SeedService().ensureAdminExists();
     });
   }
 

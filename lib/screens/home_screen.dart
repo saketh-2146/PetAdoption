@@ -13,7 +13,7 @@ import '../widgets/loading_widget.dart';
 import 'pet_detail_screen.dart';
 import 'search_screen.dart';
 import 'notifications_screen.dart';
-import 'dart:math';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

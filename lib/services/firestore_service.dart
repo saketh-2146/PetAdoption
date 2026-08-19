@@ -96,6 +96,26 @@ class FirestoreService {
     });
   }
 
+  /// Marks a pet as Adopted — removes it from the marketplace (only 'Approved'
+  /// pets are shown) and updates the winning application to 'approved'.
+  Future<void> markPetAdopted(String petId, String applicationId) async {
+    final batch = _db.batch();
+
+    // Change pet status to 'Adopted' → hides it from marketplace
+    batch.update(_pets.doc(petId), {
+      'status': 'Adopted',
+      'adoptedAt': FieldValue.serverTimestamp(),
+    });
+
+    // Mark the winning application as approved
+    batch.update(
+      _pets.doc(petId).collection('applications').doc(applicationId),
+      {'status': 'approved'},
+    );
+
+    await batch.commit();
+  }
+
   Future<Map<String, int>> adminStats() async {
     final listingsQuery = await _pets.get();
     final usersQuery = await _users.get();
@@ -299,5 +319,36 @@ class FirestoreService {
       batch.delete(doc);
     }
     await batch.commit();
+  }
+
+  // ---------------- Emails ----------------
+
+  Future<void> sendAdoptionEmail({
+    required String sellerEmail,
+    required String petName,
+    required String applicantName,
+    required String applicantPhone,
+    required String applicantEmail,
+    required String applicantAddress,
+    required String note,
+  }) async {
+    await _db.collection('mail').add({
+      'to': sellerEmail,
+      'message': {
+        'subject': '🎉 New Adoption Request for $petName!',
+        'text': '''
+You have a new adoption request for $petName!
+
+Applicant Details:
+Name: $applicantName
+Email: $applicantEmail
+Phone: $applicantPhone
+Address: $applicantAddress
+
+Message: 
+${note.isEmpty ? 'No message provided.' : note}
+'''
+      }
+    });
   }
 }

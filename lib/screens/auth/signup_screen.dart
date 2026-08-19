@@ -48,10 +48,19 @@ class _SignupScreenState extends State<SignupScreen> {
       );
       await _seed.seedWelcomeNotifications(cred.user!.uid);
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration successful! A welcome email has been sent to your inbox.'),
+            backgroundColor: AppColors.primary,
+            duration: Duration(seconds: 5),
+          ),
+        );
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
     } catch (e) {
-      setState(() => _error = AuthService.friendlyError(e));
+      final msg = AuthService.friendlyError(e);
+      setState(() => _error = msg);
+
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -84,7 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     style: outfit(size: 14, color: AppColors.muted)),
                 const SizedBox(height: 24),
                 DropdownButtonFormField<String>(
-                  value: _selectedRole,
+                  initialValue: _selectedRole,
                   decoration: const InputDecoration(labelText: 'Role', prefixIcon: Icon(Icons.manage_accounts_outlined)),
                   items: const [
                     DropdownMenuItem(value: 'user', child: Text('User')),

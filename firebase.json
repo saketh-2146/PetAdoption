@@ -1,1 +1,43 @@
-{"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"android":{"default":{"projectId":"petsselling-d3076","appId":"1:669329188204:android:15ee146a7ec2bc3594ff49","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"petsselling-d3076","configurations":{"android":"1:669329188204:android:15ee146a7ec2bc3594ff49","ios":"1:669329188204:ios:a7161d3c4b44d5a194ff49","macos":"1:669329188204:ios:a7161d3c4b44d5a194ff49","web":"1:669329188204:web:59f8336ba709ed3294ff49","windows":"1:669329188204:web:b245bbbf5f8cd29094ff49"}}}}}}
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "petsselling-d3076",
+          "appId": "1:669329188204:android:15ee146a7ec2bc3594ff49",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "petsselling-d3076",
+          "configurations": {
+            "android": "1:669329188204:android:15ee146a7ec2bc3594ff49",
+            "ios": "1:669329188204:ios:a7161d3c4b44d5a194ff49",
+            "macos": "1:669329188204:ios:a7161d3c4b44d5a194ff49",
+            "web": "1:669329188204:web:59f8336ba709ed3294ff49",
+            "windows": "1:669329188204:web:b245bbbf5f8cd29094ff49"
+          }
+        }
+      }
+    }
+  }
+}

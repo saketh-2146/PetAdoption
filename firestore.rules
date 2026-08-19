@@ -3,32 +3,42 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Anyone signed in can browse the pet catalogue; only signed-in users
-    // can create listings, and only the owner (or an admin, wire up custom
-    // claims for that) can edit/delete their own listing.
+    // ── Pets ─────────────────────────────────────────────────────────────────
+    // Anyone can browse listings; only sellers/admins can create or edit.
     match /pets/{petId} {
       allow read: if true;
       allow create: if request.auth != null && (
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'seller' ||
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
       );
-      allow update, delete: if request.auth != null && (
+      allow update: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'seller' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'adoptedAt'])
+      );
+      allow delete: if request.auth != null && (
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'seller' ||
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
       );
 
-      // Applications subcollection
+      // ── Applications subcollection ──────────────────────────────────────
+      // Any signed-in user (buyer/user role) can submit an application.
+      // Only the applicant or the pet owner can read it.
       match /applications/{appId} {
+        allow create: if request.auth != null;
         allow read: if request.auth != null && (
-          resource.data.applicantUid == request.auth.uid || 
-          get(/databases/$(database)/documents/pets/$(petId)).data.listedByUid == request.auth.uid
+          resource.data.applicantUid == request.auth.uid ||
+          get(/databases/$(database)/documents/pets/$(petId)).data.listedByUid == request.auth.uid ||
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
         );
-        allow update, delete: if request.auth != null && resource.data.applicantUid == request.auth.uid;
-        allow create: if request.auth != null && request.resource.data.applicantUid == request.auth.uid;
+        allow update, delete: if request.auth != null && (
+          resource.data.applicantUid == request.auth.uid ||
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        );
       }
     }
 
-    // Allow collection group queries on 'applications' so users can fetch their orders
+    // Allow collection-group queries on 'applications' (used for My Orders screen)
     match /{path=**}/applications/{appId} {
       allow read: if request.auth != null && (
         resource.data.applicantUid == request.auth.uid ||
@@ -36,18 +46,26 @@ service cloud.firestore {
       );
     }
 
-    // Relaxed for admin dashboard
+    // ── Users ────────────────────────────────────────────────────────────────
+    // Any signed-in user can read/write user documents (needed for profile,
+    // wishlist, and cross-user operations like sending seller notifications).
     match /users/{uid} {
       allow read, write: if request.auth != null;
 
+      // Notifications: any signed-in user can create (needed for buyer→seller
+      // notification). Only the owner can read, update, delete their own.
       match /notifications/{notifId} {
-        allow read, update, delete: if request.auth != null && request.auth.uid == uid;
         allow create: if request.auth != null;
+        allow read, update, delete: if request.auth != null && request.auth.uid == uid;
+      }
+
+      // Addresses: only the owning user can manage their own addresses.
+      match /addresses/{addressId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
       }
     }
 
-    // Chats: only participants can read/write, and only the two people
-    // already listed as participants can post messages.
+    // ── Chats ────────────────────────────────────────────────────────────────
     match /chats/{chatId} {
       allow read, update: if request.auth != null
         && request.auth.uid in resource.data.participantUids;
@@ -60,6 +78,15 @@ service cloud.firestore {
         allow create: if request.auth != null
           && request.resource.data.senderUid == request.auth.uid;
       }
+    }
+
+    // ── Mail (Welcome / Transactional Emails) ─────────────────────────────────
+    // Authenticated users can create email documents.
+    // The "Trigger Email from Firestore" extension reads these with its own
+    // service account — no client read rule is required.
+    match /mail/{mailId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false; // only the extension service account accesses these
     }
   }
 }

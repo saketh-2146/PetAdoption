@@ -25,7 +25,7 @@ void main() {
     });
 
     test('Address.toMap should serialize correctly', () {
-      final address = Address(
+      const address = Address(
         id: 'addr_1',
         title: 'Home',
         street: '123 Pet Street',
@@ -48,7 +48,7 @@ void main() {
     });
 
     test('Address.copyWith should update fields correctly', () {
-      final address = Address(
+      const address = Address(
         id: 'addr_1',
         title: 'Home',
         street: '123 Pet Street',
