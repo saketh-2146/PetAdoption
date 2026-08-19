@@ -1,30 +1,36 @@
 import sys
 import pandas as pd
 import random
-import itertools
 
-def generate_300_unique_test_names():
-    actions = ["Verify", "Validate", "Check", "Test", "Ensure"]
-    subjects = ["user login", "registration", "password reset", "pet listing creation", "image upload", "adoption application", "admin approval", "search filter", "wishlist addition", "checkout process", "profile update", "notification delivery", "email dispatch", "Firebase authentication", "database write", "API rate limiting", "session timeout", "form validation", "error handling", "data synchronization"]
-    conditions = ["with valid data", "with missing fields", "using invalid credentials", "on slow network", "with special characters", "exceeding max length", "with empty required fields", "during concurrent requests", "with expired token", "after cold start", "with caching disabled", "under heavy load", "with unsupported file format", "using SQL injection payload", "with XSS payload"]
+def generate_300_short_test_names():
+    features = [
+        "Login", "Register", "Logout", "Profile", "AddPet", "EditPet", 
+        "DeletePet", "Wishlist", "Search", "Filter", "Checkout", 
+        "AdminApprove", "AdminReject", "NotifyEmail", "NotifyApp", 
+        "UploadImage", "Database", "API_Health", "Payment", "AuthToken"
+    ]
+    scenarios = [
+        "Valid", "Invalid", "Empty", "Null", "Timeout", 
+        "Boundary", "MaxLen", "MinLen", "Duplicate", "Missing",
+        "Success", "Failed", "Retry", "SQLi", "XSS"
+    ]
     
-    # Generate all possible combinations: 5 * 20 * 15 = 1500 unique names
+    # 20 features * 15 scenarios = 300 exactly unique combinations
     all_combinations = []
-    for action in actions:
-        for subject in subjects:
-            for condition in conditions:
-                all_combinations.append(f"{action} {subject} {condition}")
-                
-    # Shuffle and pick exactly 300 unique names
+    for feature in features:
+        for scenario in scenarios:
+            all_combinations.append(f"{feature}_{scenario}")
+            
+    # Shuffle for randomness
     random.shuffle(all_combinations)
-    return all_combinations[:300]
+    return all_combinations
 
 def generate_report(name):
     data = []
     priorities = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
     
-    # Get exactly 300 unique test names
-    unique_test_names = generate_300_unique_test_names()
+    # Get exactly 300 unique short test names
+    unique_test_names = generate_300_short_test_names()
     
     for i in range(1, 301):
         duration = f"{random.uniform(0.05, 0.45):.3f}s"
