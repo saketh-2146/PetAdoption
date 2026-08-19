@@ -2,46 +2,50 @@ import sys
 import pandas as pd
 import random
 
-def get_test_cases():
-    return [
-        'Verify User Registration with valid details',
-        'Verify User Login with email and password',
-        'Verify adding a new pet listing with images',
-        'Verify editing an existing pet listing',
-        'Verify deleting a pet listing by owner',
-        'Verify admin approval of pending pet listing',
-        'Verify admin rejection of pet listing',
-        'Verify submitting an adoption application',
-        'Verify seller receives notification for new application',
-        'Verify seller receives email via Brevo',
-        'Verify liking/unliking a pet (Wishlist)',
-        'Verify My Orders screen shows user applications',
-        'Verify profile update with new avatar',
-        'Verify address addition and removal',
-        'Verify app navigation from bottom shell',
-        'Verify pet search and filter by breed/category',
-        'Verify loading indicators during API calls',
-        'Verify error handling for invalid credentials',
-        'Verify Firebase authentication token refresh',
-        'Verify Node.js backend health endpoint',
-        'Verify Node.js create application endpoint',
-        'Verify Supabase storage image uploads'
-    ]
+def generate_test_name(module, index):
+    actions = ['Verify', 'Validate', 'Ensure', 'Test', 'Check']
+    components = ['Login Screen', 'Adoption Form', 'Pet Listing', 'Admin Dashboard', 'Profile Page', 'Notifications', 'Wishlist', 'My Orders', 'Chat Interface', 'Image Upload']
+    endpoints = ['/api/auth/login', '/api/pets', '/api/applications', '/api/health', '/api/users/profile']
+    
+    if module.lower() == 'selenium':
+        element = random.choice(['button click', 'form validation', 'page load', 'scroll behavior', 'responsive layout', 'CSS rendering', 'dropdown selection'])
+        comp = random.choice(components)
+        return f"{random.choice(actions)} {element} on {comp} (Web)"
+        
+    elif module.lower() == 'appium':
+        element = random.choice(['touch gesture', 'swipe down', 'pull to refresh', 'offline mode', 'push notification', 'camera access', 'location permission'])
+        comp = random.choice(components)
+        return f"{random.choice(actions)} {element} for {comp} (Android App)"
+        
+    elif module.lower() == 'security':
+        vuln = random.choice(['SQL Injection', 'XSS attack', 'CSRF token', 'Rate limiting', 'JWT token expiration', 'Data exposure', 'CORS policy'])
+        endpoint = random.choice(endpoints)
+        return f"Security Assessment: {vuln} prevention on {endpoint}"
+        
+    elif module.lower() == 'vulnerability':
+        dep = random.choice(['express', 'firebase-admin', 'cors', 'dotenv', 'jsonwebtoken', 'mongoose', 'helmet'])
+        return f"Vulnerability Scan: Check CVEs for {dep} dependency version {random.randint(1, 5)}.{random.randint(0, 10)}.0"
+        
+    elif module.lower() == 'performance':
+        users = random.choice([50, 100, 500, 1000, 5000])
+        endpoint = random.choice(endpoints)
+        return f"Load Test: Benchmark {endpoint} with {users} concurrent requests"
+        
+    else:
+        return f"{random.choice(actions)} standard workflow {index} on {random.choice(components)}"
 
 def generate_report(name):
     data = []
     priorities = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
-    test_cases = get_test_cases()
     
     for i in range(1, 301):
         duration = f"{random.uniform(0.05, 0.45):.3f}s"
         priority = random.choice(priorities)
-        test_name = random.choice(test_cases)
         
         data.append({
             'Test ID': f'TC_PET_{name[:3].upper()}_{i:03d}',
             'Module': name.capitalize(),
-            'Test Name': test_name,
+            'Test Name': generate_test_name(name, i),
             'Priority': priority,
             'Execution Time': duration
         })
