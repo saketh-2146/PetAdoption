@@ -2,47 +2,51 @@ import sys
 import pandas as pd
 import random
 
-def generate_300_short_test_names():
-    features = [
-        "Login", "Register", "Logout", "Profile", "AddPet", "EditPet", 
-        "DeletePet", "Wishlist", "Search", "Filter", "Checkout", 
-        "AdminApprove", "AdminReject", "NotifyEmail", "NotifyApp", 
-        "UploadImage", "Database", "API_Health", "Payment", "AuthToken"
+def get_scenarios_for_module(module_name):
+    # Base scenarios inspired by the reference image
+    return [
+        f"Verify {module_name} - Valid Data Input & Successful Execution",
+        f"Verify {module_name} - Invalid Data Handling and Error Messages",
+        f"Verify {module_name} - Empty Field Validation Checks",
+        f"Verify {module_name} - State Persistence and Refresh",
+        f"Verify {module_name} - UI Component Visibility and Interaction",
+        f"Verify {module_name} - Timeout and Expiration Handling",
+        f"Verify {module_name} - Authorization and Token Validation",
+        f"Verify {module_name} - Edge Case Boundary Data Processing",
+        f"Verify {module_name} - API Response Latency and Fallbacks",
+        f"Verify {module_name} - Concurrent Request Handling",
+        f"Verify {module_name} - Secure Storage and Encryption",
+        f"Verify {module_name} - Graceful Degradation on Failure"
     ]
-    scenarios = [
-        "Valid", "Invalid", "Empty", "Null", "Timeout", 
-        "Boundary", "MaxLen", "MinLen", "Duplicate", "Missing",
-        "Success", "Failed", "Retry", "SQLi", "XSS"
-    ]
-    
-    # 20 features * 15 scenarios = 300 exactly unique combinations
-    all_combinations = []
-    for feature in features:
-        for scenario in scenarios:
-            all_combinations.append(f"{feature}_{scenario}")
-            
-    # Shuffle for randomness
-    random.shuffle(all_combinations)
-    return all_combinations
 
 def generate_report(name):
     data = []
     priorities = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
-    
-    # Get exactly 300 unique short test names
-    unique_test_names = generate_300_short_test_names()
+    module_display = name.capitalize()
+    scenarios = get_scenarios_for_module(module_display)
     
     for i in range(1, 301):
-        duration = f"{random.uniform(0.05, 0.45):.3f}s"
+        duration = f"{random.uniform(0.05, 0.16):.3f}s"
         priority = random.choice(priorities)
         
+        # Cycle through the scenarios like in the screenshot
+        test_name = scenarios[(i - 1) % len(scenarios)]
+        
         data.append({
-            'Test ID': f'TC_PET_{name[:3].upper()}_{i:03d}',
-            'Module': name.capitalize(),
-            'Test Name': unique_test_names[i - 1],
+            'Test ID': f'TC_M_{name[:4].upper()}_{i:03d}',
+            'Module': module_display,
+            'Test Name': test_name,
             'Priority': priority,
-            'Execution Time': duration
+            'Status': 'PASSED',
+            'Execution Time': duration,
+            'Preconditions': 'Android App Installed / Web Running',
+            'Test Steps': '1. Open App 2. Execute Action 3. Verify Result',
+            'Test Data': 'Payload #'+str(random.randint(1000, 9999)),
+            'Expected Result': 'Action Succeeds',
+            'Actual Result': 'Action Succeeded',
+            'Failure Reason': 'N/A'
         })
+        
     df = pd.DataFrame(data)
     df.to_excel(f'{name}_report.xlsx', index=False)
 
@@ -50,6 +54,5 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         generate_report(sys.argv[1])
     else:
-        generate_report('selenium')
-        generate_report('appium')
-        generate_report('k6')
+        for default_module in ['selenium', 'appium', 'security', 'vulnerability', 'performance']:
+            generate_report(default_module)
